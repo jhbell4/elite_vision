@@ -70,27 +70,15 @@ def train_knn(X_train, y_train, k_range=[3, 11], cv=10):
     param_grid = dict(n_neighbors=list(range(k_range[0], k_range[1])))
 
     knn = KNeighborsClassifier()
-    grid = GridSearchCV(knn, param_grid, cv=cv, scoring='accuracy', return_train_score=False,verbose=2)
+    grid = GridSearchCV(knn, param_grid, cv=cv, scoring='accuracy', return_train_score=False,verbose=1)
 
-    grid_search=grid.fit(X_train, y_train)
-
-    # k_range = list(range(k_range[0], k_range[1]))
-    # for k in k_range:
-    #     knn = KNeighborsClassifier(n_neighbors=k)
-    #     scores = cross_val_score(knn, X_train, y_train, cv=10, scoring='accuracy', verbose=0)
-    #     k_scores.append(scores.mean())
-
-    # plt.plot(k_range, k_scores)
-    # plt.xlabel('Value of K for KNN')
-    # plt.ylabel('Cross-Validated Accuracy')
-
-    # # Re-train with best param
-    # best_param = k_range[k_scores.index(max(k_scores))]
-    # print('Best param: ', best_param)
-    # knn = KNeighborsClassifier(n_neighbors=best_param)
-    # knn.fit(X_train, y_train)
+    grid.fit(X_train, y_train)
 
     print(grid.best_params_)
+    grid_mean_scores = [result for result in grid.cv_results_['mean_test_score']]
+    plt.plot(range(k_range[0], k_range[1]), grid_mean_scores)
+    plt.xlabel('Value of K for KNN')
+    plt.ylabel('Cross-Validated Accuracy')
 
     # Save best parameter network
     knnPickle = open('output/glcm/knnpickle_file.pkl', 'wb') 
@@ -108,7 +96,7 @@ def train_svm(X_train, y_train, cv=10):
               'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
               'kernel': ['rbf']}
 
-    grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 2, cv=cv)   
+    grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 1, cv=cv)   
     # fitting the model for grid search
     grid.fit(X_train, y_train)
 
@@ -119,11 +107,11 @@ def train_svm(X_train, y_train, cv=10):
     print(grid.best_estimator_)
 
     # Save best parameter network
-    knnPickle = open('output/glcm/svmpickle_file.pkl', 'wb') 
+    svmPickle = open('output/glcm/svmpickle_file.pkl', 'wb') 
     # source, destination 
-    pickle.dump(grid.best_estimator_, knnPickle)  
+    pickle.dump(grid.best_estimator_, svmPickle)  
     # close the file
-    knnPickle.close()
+    svmPickle.close()
 
 
 def main(opt, method):
@@ -169,4 +157,4 @@ def main(opt, method):
 
 
 if __name__ == "__main__":
-    main('test', 'knn')
+    main('train', 'knn')
