@@ -37,7 +37,6 @@ def main():
     testset = torchvision.datasets.ImageFolder(root=test_directory, transform=transform)
 
     classes = trainset.classes
-    print(classes)
 
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
