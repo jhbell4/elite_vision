@@ -1,3 +1,4 @@
 vision_project/
 vision_dataset/
 __pycache__/
+cifar_net.pth
