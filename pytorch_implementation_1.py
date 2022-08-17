@@ -12,7 +12,7 @@ import torch.optim as optim # optimzer
 
 # define directory
 dirname = os.path.dirname(__file__)
-data_directory = os.path.join(dirname, 'vision_dataset/vision_dataset')
+data_directory = os.path.join(dirname, 'vision_dataset\\vision_dataset')
 train_directory = os.path.join(data_directory, 'train')
 test_directory = os.path.join(data_directory, 'test')
 
