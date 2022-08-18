@@ -12,10 +12,14 @@ import torch.optim as optim # optimzer
 
 from image_handling import imshow
 from neural_network import Net
+from neural_network import preprocess_transform
 
 import csv
 
 def main():
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(device)
+
     # define directory
     dirname = os.path.dirname(__file__)
     data_directory = os.path.join(dirname, 'vision_dataset\\')
@@ -24,13 +28,10 @@ def main():
     # python image library of range [0, 1] 
     # transform them to tensors of normalized range[-1, 1]
 
-    transform = transforms.Compose( # composing several transforms together
-        [transforms.ToTensor(), # to tensor object
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), # mean = 0.5, std = 0.5
-        transforms.CenterCrop((281,281))]) 
+    transform = preprocess_transform()
 
     # set batch_size
-    batch_size = 16
+    batch_size = 400
 
     # set number of workers
     num_workers = 2
@@ -47,6 +48,7 @@ def main():
     validloader = torch.utils.data.DataLoader(dataset_validate, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
     net = Net()
+    net.to(device)
     print(net)
 
     criterion = nn.CrossEntropyLoss()
@@ -61,13 +63,16 @@ def main():
 
     start.record()
 
-    for epoch in range(20):  # loop over the dataset multiple times
+    for epoch in range(100):  # loop over the dataset multiple times
         
         # Train
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            print(inputs.is_cuda)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -87,6 +92,8 @@ def main():
         with torch.no_grad():
             for data in trainloader:
                 images, labels = data
+                images = images.to(device)
+                labels = labels.to(device)
                 # calculate outputs by running images through the network
                 outputs = net(images)
                 # the class with the highest energy is what we choose as prediction
@@ -102,6 +109,8 @@ def main():
         with torch.no_grad():
             for data in validloader:
                 images, labels = data
+                images = images.to(device)
+                labels = labels.to(device)
                 # calculate outputs by running images through the network
                 outputs = net(images)
                 # the class with the highest energy is what we choose as prediction

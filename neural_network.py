@@ -7,6 +7,16 @@ import torch.nn as nn # basic building block for neural neteorks
 import torch.nn.functional as F # import convolution functions like Relu
 import torch.optim as optim # optimzer
 
+def preprocess_transform():
+    trans1 = transforms.ToTensor() # to tensor object
+    trans2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) # mean = 0.5, std = 0.5
+    trans3 = transforms.CenterCrop((1000,1000))
+    trans4 = transforms.RandomCrop((281,281))
+    trans5 = transforms.RandomHorizontalFlip()
+    trans6 = transforms.RandomVerticalFlip()
+    transform = transforms.Compose([trans1,trans2,trans3,trans4,trans5,trans6])
+    return transform
+
 class Net(nn.Module):
 
     def __init__(self):
