@@ -23,11 +23,11 @@ def main():
     transform = transforms.Compose( # composing several transforms together
         [transforms.ToTensor(), # to tensor object
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        transforms.CenterCrop((294,294))]) # mean = 0.5, std = 0.5
+        transforms.CenterCrop((281,281))]) # mean = 0.5, std = 0.5
 
     dirname = os.path.dirname(__file__)
     data_directory = os.path.join(dirname, 'vision_dataset\\')
-    test_directory = os.path.join(data_directory, 'test')
+    test_directory = os.path.join(data_directory, 'train')
     testset = torchvision.datasets.ImageFolder(root=test_directory, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
