@@ -17,6 +17,13 @@ def preprocess_transform():
     transform = transforms.Compose([trans1,trans2,trans3,trans4,trans5,trans6])
     return transform
 
+def validation_transform():
+    trans1 = transforms.ToTensor() # to tensor object
+    trans2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) # mean = 0.5, std = 0.5
+    trans3 = transforms.CenterCrop((281,281))
+    transform = transforms.Compose([trans1,trans2,trans3])
+    return transform
+
 class Net(nn.Module):
 
     def __init__(self):

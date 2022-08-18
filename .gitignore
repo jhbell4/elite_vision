@@ -1,5 +1,6 @@
 vision_project/
 vision_dataset/
+vision_dataset_combined/
 __pycache__/
 cifar_net.pth
 output/glcm/*

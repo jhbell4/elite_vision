@@ -1,0 +1,22 @@
+new_array = readmatrix('fixed_csv.csv');
+
+iterations = new_array(:,1)';
+train_loss = new_array(:,2)';
+train_acc = new_array(:,3)';
+valid_loss = new_array(:,4)';
+valid_acc = new_array(:,5)';
+
+figure(1);clf;
+subplot(2,1,1);
+plot(iterations,train_loss);
+hold on
+plot(iterations,valid_loss);
+ylabel('Loss');
+l
+
+subplot(2,1,2);
+plot(iterations,train_acc);
+hold on
+plot(iterations,valid_acc);
+xlabel('Iteration');
+ylabel('Accuracy');
