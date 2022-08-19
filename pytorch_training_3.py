@@ -15,8 +15,8 @@ import torch.optim as optim # optimzer
 from torch.optim import lr_scheduler
 
 from image_handling import imshow
-from neural_network import preprocess_transform
-from neural_network import validation_transform, Net
+from neural_network_resnet import preprocess_transform
+from neural_network_resnet import validation_transform, Net
 
 import csv
 
