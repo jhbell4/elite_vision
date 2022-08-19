@@ -16,7 +16,7 @@ from torch.optim import lr_scheduler
 
 from image_handling import imshow
 from neural_network import preprocess_transform
-from neural_network import validation_transform
+from neural_network import validation_transform, Net
 
 import csv
 
@@ -37,7 +37,7 @@ def main():
     valid_transform = validation_transform()
 
     # set batch_size
-    batch_size = 400
+    batch_size = 64
 
     # set number of workers
     num_workers = 2
@@ -53,9 +53,10 @@ def main():
     dataloaders = {'train': trainloader, 'val': validloader}
     
     # Model Building
-    model_ft = models.resnet18(pretrained=True)
-    num_ftrs = model_ft.fc.in_features
-    model_ft.fc = nn.Linear(num_ftrs, len(class_names))
+    # model_ft = models.resnet18(pretrained=True)
+    model_ft = Net()
+    # num_ftrs = model_ft.fc.in_features
+    # model_ft.fc = nn.Linear(num_ftrs, len(class_names))
     model_ft = model_ft.to(device)
 
     print(model_ft)
@@ -63,8 +64,8 @@ def main():
     criterion = nn.CrossEntropyLoss()
     #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)#lr=0.001, momentum=0.9
     optimizer_ft = optim.Adam(model_ft.parameters(), lr=0.001)#lr=0.001
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-
+    # exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+    exp_lr_scheduler = 0
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
 
@@ -73,7 +74,7 @@ def main():
 
     start.record()
 
-    model = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, device, dataloaders, dataset_sizes, csv_writer, num_epochs=100)
+    model = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, device, dataloaders, dataset_sizes, csv_writer, num_epochs=250)
 
     # whatever you are timing goes here
     end.record()
@@ -88,7 +89,7 @@ def main():
 
     # save
     PATH = './cifar_net.pth'
-    torch.save(model.state, PATH)
+    torch.save(model.state_dict(), PATH)
 
 def train_model(model, criterion, optimizer, scheduler, device, dataloaders, dataset_sizes, csvwriter, num_epochs=25):
     since = time.time()
@@ -99,6 +100,19 @@ def train_model(model, criterion, optimizer, scheduler, device, dataloaders, dat
     for epoch in range(num_epochs):
         print(f'Epoch {epoch}/{num_epochs - 1}')
         print('-' * 10)
+        
+        if epoch == 99:
+            PATH = './cifar_net_99.pth'
+            torch.save(model.state_dict(), PATH)
+            optimizer = optim.Adam(model.parameters(), lr=0.0001)
+        elif epoch == 149:
+            PATH = './cifar_net_149.pth'
+            torch.save(model.state_dict(), PATH)
+            optimizer = optim.Adam(model.parameters(), lr=0.00001)
+        elif epoch == 199:
+            PATH = './cifar_net_199.pth'
+            torch.save(model.state_dict(), PATH)
+            optimizer = optim.Adam(model.parameters(), lr=0.000001)
 
         csv_data = [epoch]
         # Each epoch has a training and validation phase
@@ -134,8 +148,8 @@ def train_model(model, criterion, optimizer, scheduler, device, dataloaders, dat
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
-            if phase == 'train':
-                scheduler.step()
+            # if phase == 'train':
+                # scheduler.step()
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]

@@ -27,14 +27,14 @@ def main():
 
     dirname = os.path.dirname(__file__)
     data_directory = os.path.join(dirname, 'vision_dataset\\')
-    test_directory = os.path.join(data_directory, 'train')
+    test_directory = os.path.join(data_directory, 'test')
     testset = torchvision.datasets.ImageFolder(root=test_directory, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     ## Load Network
 
     net = Net()
-    PATH = './cifar_net.pth'
+    PATH = './results/20220818_1252/cifar_net.pth'
     net.load_state_dict(torch.load(PATH))
 
     # Check Accuracy

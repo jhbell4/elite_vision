@@ -14,14 +14,14 @@ import torch.nn.functional as F # import convolution functions like Relu
 import torch.optim as optim # optimzer
 
 from image_handling import imshow
-from neural_network import validation_transform
+from neural_network import validation_transform, Net
 
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(device)
     # # Define Test Set Parameters
     # set batch_size
-    batch_size = 4
+    batch_size = 400
     # set number of workers
     num_workers = 2
 
@@ -36,14 +36,15 @@ def main():
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     ## Load Network
-
+    model_ft = Net()
     # Model Building
-    #model_ft = models.resnet18(pretrained=True)
+    # model_ft = models.resnet18(pretrained=True)
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs, len(class_names))
-    PATH = './cifar_net.pth'
-    #model_ft.load_state_dict(torch.load(PATH))
-    model_ft = torch.load(PATH)
+    PATH = './results/20220818_1252/cifar_net.pth'
+    model_ft.load_state_dict(torch.load(PATH))
+    # model_ft = torch.load(PATH)
+    
     model_ft = model_ft.to(device)
 
     # Check Accuracy

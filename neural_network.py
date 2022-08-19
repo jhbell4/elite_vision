@@ -6,7 +6,7 @@ import torchvision.transforms as transforms # transform data
 import torch.nn as nn # basic building block for neural neteorks
 import torch.nn.functional as F # import convolution functions like Relu
 import torch.optim as optim # optimzer
-
+from torchvision import datasets, models, transforms
 def preprocess_transform():
     trans1 = transforms.ToTensor() # to tensor object
     trans2 = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) # mean = 0.5, std = 0.5
